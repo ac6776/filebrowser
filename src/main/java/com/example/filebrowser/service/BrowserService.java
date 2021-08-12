@@ -1,29 +1,30 @@
 package com.example.filebrowser.service;
 
 import com.example.filebrowser.domain.FileObject;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 
 @Service
 @Data
+@AllArgsConstructor
 public class BrowserService {
-    private String path;
-    private File file;
+    private FileObject fileObject;
 
     public FileObject loadFileNames(String path) {
         if (null == path) {
             path = System.getProperty("user.home");
         }
-        file = new File(path);
-        FileObject fileObject = new FileObject();
+        File file = new File(path);
         if (!file.exists()) {
-            return fileObject;
+            return this.fileObject;
         }
         for (File f : file.listFiles()) {
-            fileObject.put(f);
+            this.fileObject.put(f);
         }
-        return fileObject;
+        return this.fileObject;
     }
 }
