@@ -1,30 +1,34 @@
 package com.example.filebrowser.service;
 
 import com.example.filebrowser.domain.FileObject;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.filebrowser.domain.FileTransferObject;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@Data
-@AllArgsConstructor
 public class BrowserService {
-    private FileObject fileObject;
+    private static final String HOME_DIR = System.getProperty("user.home");
 
-    public FileObject loadFileNames(String path) {
+    public FileTransferObject load(String path) {
         if (null == path) {
-            path = System.getProperty("user.home");
+            path = HOME_DIR;
         }
         File file = new File(path);
         if (!file.exists()) {
-            return this.fileObject;
+            //todo throw FileNotFoundException
+            return null;
         }
-        for (File f : file.listFiles()) {
-            this.fileObject.put(f);
+        if (file.isFile()) {
+            //todo
+            return null;
         }
-        return this.fileObject;
+        List<FileObject> fileObjects = Arrays.stream(file.listFiles())
+                .map(f -> new FileObject(f.getName(), f.getAbsolutePath(), f.isDirectory(), f.isHidden()))
+                .collect(Collectors.toList());
+        return new FileTransferObject(file.getParent(), fileObjects);
     }
 }
