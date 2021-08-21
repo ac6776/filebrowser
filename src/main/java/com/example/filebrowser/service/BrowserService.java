@@ -2,6 +2,7 @@ package com.example.filebrowser.service;
 
 import com.example.filebrowser.domain.FileObject;
 import com.example.filebrowser.domain.FileTransferObject;
+import com.example.filebrowser.domain.Path;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -13,11 +14,11 @@ import java.util.stream.Collectors;
 public class BrowserService {
     private static final String HOME_DIR = System.getProperty("user.home");
 
-    public FileTransferObject load(String path) {
+    public FileTransferObject load(Path path) {
         if (null == path) {
-            path = HOME_DIR;
+            path = new Path(HOME_DIR);
         }
-        File file = new File(path);
+        File file = new File(path.getPath());
         if (!file.exists()) {
             //todo throw FileNotFoundException
             return null;
