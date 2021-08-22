@@ -1,29 +1,41 @@
 <template>
   <div class="container mt-5">
-    <h1>My filebrowser</h1>
-    <div class="mt-2">
-      <button type="button" class="btn btn-outline-primary m-1">Показать скрытые файлы</button>
-      <button type="button" class="btn btn-outline-secondary m-1">Спрятать скрытые файлы</button>
-      <button type="button" class="btn btn-outline-success m-1">Показать скрытые папки</button>
-      <button type="button" class="btn btn-outline-danger m-1">Спрятать Скрытые файлы</button>
+    <div class="d-flex justify-content-between">
+      <h1 class="primary-font">My filebrowser</h1>
+      <NavBar></NavBar>
     </div>
-    <div>
-      <FilesList></FilesList>
-    </div>
+    <button type="button" @click="show()">Change</button>
+    <FilesList :showHidden="showHidden"></FilesList>
   </div>
 </template>
 
 <script>
 import FilesList from "@/components/FilesList";
+import NavBar from "@/components/NavBar";
 
 export default {
   name: 'App',
+  data() {
+    return {
+      showHidden: false
+    }
+  },
   components: {
-    FilesList
+    FilesList,
+    NavBar
+  },
+  methods: {
+    show: function () {
+      this.showHidden = !this.showHidden,
+      console.log(this.showHidden + " form App.vue")
+    }
   }
 }
 </script>
 
-<style lang="less">
-
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+.primary-font {
+  font-family: 'Bebas Neue', cursive;
+}
 </style>

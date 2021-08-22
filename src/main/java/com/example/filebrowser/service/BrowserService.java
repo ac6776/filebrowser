@@ -27,9 +27,23 @@ public class BrowserService {
             //todo
             return null;
         }
+
+        FileObject parentFileObject = null;
+        if (file.getParent() != null) {
+            File parent = new File(file.getParent());
+            parentFileObject = new FileObject(
+                    parent.getName(),
+                    parent.getPath(),
+                    parent.isDirectory(),
+                    parent.isHidden());
+        }
+
         List<FileObject> fileObjects = Arrays.stream(file.listFiles())
                 .map(f -> new FileObject(f.getName(), f.getAbsolutePath(), f.isDirectory(), f.isHidden()))
                 .collect(Collectors.toList());
-        return new FileTransferObject(file.getParent(), fileObjects);
+        return new FileTransferObject(
+                parentFileObject,
+                new FileObject(file.getName(), file.getPath(), file.isDirectory(), file.isHidden()),
+                fileObjects);
     }
 }

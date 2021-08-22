@@ -11,7 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FileTransferObject {
-    private String parentPath;
+    private FileObject parent;
+    private FileObject current;
     private List<FileObject> fileObjectList;
 
     public void addFileObject(FileObject file) {
