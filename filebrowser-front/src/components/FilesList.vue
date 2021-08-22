@@ -7,9 +7,9 @@
       <section v-if="errored">
         <h2>Unable to load</h2>
       </section>
-      <div class="list-group mt-2">
+      <div class="list-group mt-2 text-break">
 <!--        todo-->
-        <button v-for="file in files" v-if="this.showHidden" v-on:click="step(file.path)" type="button" class="list-group-item list-group-item-action">{{ file.name }}</button>
+        <button v-for="file in showFiles" v-on:click="step(file.path)" type="button" class="list-group-item list-group-item-action">{{ file.name }}</button>
       </div>
     </div>
     <div class="col">
@@ -64,6 +64,21 @@ export default {
           this.files = response.data.fileObjectList
       ));
     },
+  },
+  computed: {
+    showFiles: function() {
+      if(this.files) {
+        return this.files.filter(f => {
+          if (this.showHidden) {
+            return f;
+          } else {
+            if (!f.hidden) {
+              return f;
+            }
+          }
+        })
+      }
+    }
   }
 }
 </script>
