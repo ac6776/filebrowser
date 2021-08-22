@@ -1,14 +1,18 @@
 <template>
   <div class="row align-items-start">
+    <section v-if="loading">
+      <div class="d-flex align-items-center">
+        <strong>Loading...</strong>
+        <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+      </div>
+    </section>
+    <section v-if="errored">
+      <div class="alert alert-danger mt-2" role="alert">
+        Unable to load
+      </div>
+    </section>
     <div class="col">
-      <section v-if="loading">
-        <h2>Loading</h2>
-      </section>
-      <section v-if="errored">
-        <h2>Unable to load</h2>
-      </section>
       <div class="list-group mt-2 text-break">
-<!--        todo-->
         <button v-for="file in showFiles" v-on:click="step(file.path)" type="button" class="list-group-item list-group-item-action">{{ file.name }}</button>
       </div>
     </div>
