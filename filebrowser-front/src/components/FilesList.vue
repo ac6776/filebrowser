@@ -12,7 +12,9 @@
       </div>
     </section>
     <div class="col">
+      <div  class=""></div>
       <div class="list-group mt-2 text-break">
+        <button v-if="parent" @click="step(parent.path)" type="button" class="list-group-item list-group-item-action"><i class="bi bi-arrow-90deg-up go-back-arrow"></i>..</button>
         <button v-for="file in showFiles" v-on:click="step(file.path)" type="button" class="list-group-item list-group-item-action">{{ file.name }}</button>
       </div>
     </div>
@@ -49,13 +51,13 @@ export default {
         this.current = response.data.current,
         this.files = response.data.fileObjectList
       ))
-    .catch(error => {
-      console.log(error);
-      this.errored = true;
-    })
-    .finally(() => (
+      .catch(error => {
+        console.log(error);
+        this.errored = true;
+      })
+      .finally(() => (
         this.loading = false
-    ));
+      ));
   },
   methods: {
     step: function (path) {
@@ -63,10 +65,11 @@ export default {
           .post('http://localhost:8080/', {
             path
           })
-      .then(response => (
-          this.parent = response.data.parentPath,
+        .then(response => (
+          this.parent = response.data.parent,
+          this.current = response.data.current,
           this.files = response.data.fileObjectList
-      ));
+        ));
     },
   },
   computed: {
@@ -86,3 +89,9 @@ export default {
   }
 }
 </script>
+<style>
+  .go-back-arrow {
+    font-size: .85rem;
+    margin-right: 1rem;
+  }
+</style>
