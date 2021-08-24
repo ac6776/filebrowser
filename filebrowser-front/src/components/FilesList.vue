@@ -11,22 +11,15 @@
         Unable to load
       </div>
     </section>
-    <div class="col">
-      <div  class=""></div>
-      <div class="list-group mt-2 text-break">
-        <button
-            v-if="parent"
-            @click="step(parent.path)"
-              type="button" class="list-group-item list-group-item-action"><i class="bi bi-arrow-90deg-up go-back-arrow"></i>..</button>
-        <button
-            v-for="file in showFiles"
-            @click="step(file.path)"
-              type="button" class="list-group-item list-group-item-action" :disabled="!checkForDir(file)">{{ file.name }}</button>
-      </div>
-    </div>
-    <div class="col">
-    </div>
-    <div class="col">
+    <div class="d-flex flex-wrap mt-2">
+      <button
+          v-if="parent"
+          @click="step(parent.path)"
+          type="button" class="btn btn-light m-1"><i class="bi bi-arrow-90deg-up go-back-arrow"></i>..</button>
+      <button
+          v-for="file in showFiles"
+          @click="step(file.path)"
+          type="button" class="btn btn-light m-1" :disabled="!checkForDir(file)">{{ file.name }}</button>
     </div>
   </div>
 </template>
