@@ -2,10 +2,15 @@
   <div class="container mt-5">
     <div class="d-flex justify-content-between">
       <h1 class="primary-font">My filebrowser</h1>
-      <NavBar></NavBar>
+      <!--
+        Child to parent data transfer using $emit
+      -->
+      <NavBar @showHiddenFromBar="show($event)"></NavBar>
     </div>
-    <button type="button" @click="show()">Change</button>
-    <FilesList :showHidden="showHidden"></FilesList>
+    <!--
+      Parent to child data transfer using Props
+    -->
+    <FilesList :showHidden="this.showHidden"></FilesList>
   </div>
 </template>
 

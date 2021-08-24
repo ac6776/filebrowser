@@ -10,7 +10,7 @@
       <i class="bi bi-house icon"></i>
     </button>
 <!--    <button v-on:click="showOrHideFiles()" type="button" class="btn btn-outline-secondary" title="Hide/show hidden files">-->
-    <button type="button" class="btn btn-outline-secondary" title="Hide/show hidden files">
+    <button type="button" @click="showOrHideFiles()" class="btn btn-outline-secondary" title="Hide/show hidden files">
       <i class="bi bi-eye-slash icon"></i>
     </button>
   </div>
@@ -23,14 +23,14 @@ export default {
   data() {
     return {
       home: null,
-      showHidden: false,
+      // showHidden: false,
       history: []
     }
   },
   methods: {
     showOrHideFiles: function () {
-      this.showHidden = !this.showHidden,
-      console.log(this.showHidden)
+      // console.log(this.showHidden)
+      this.$emit('showHiddenFromBar')
     }
   }
 }
