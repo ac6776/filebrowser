@@ -14,7 +14,7 @@
     -->
     <FilesList
         :showHidden="this.showHidden"
-        :homeRequsted="this.homeRequested"/>
+        :homeRequested="this.homeRequested"/>
   </div>
 </template>
 
