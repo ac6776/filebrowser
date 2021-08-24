@@ -14,8 +14,14 @@
     <div class="col">
       <div  class=""></div>
       <div class="list-group mt-2 text-break">
-        <button v-if="parent" @click="step(parent.path)" type="button" class="list-group-item list-group-item-action"><i class="bi bi-arrow-90deg-up go-back-arrow"></i>..</button>
-        <button v-for="file in showFiles" v-on:click="step(file.path)" type="button" class="list-group-item list-group-item-action">{{ file.name }}</button>
+        <button
+            v-if="parent"
+            @click="step(parent.path)"
+              type="button" class="list-group-item list-group-item-action"><i class="bi bi-arrow-90deg-up go-back-arrow"></i>..</button>
+        <button
+            v-for="file in showFiles"
+            @click="step(file.path)"
+              type="button" class="list-group-item list-group-item-action" :disabled="!checkForDir(file)">{{ file.name }}</button>
       </div>
     </div>
     <div class="col">
@@ -71,6 +77,9 @@ export default {
           this.files = response.data.fileObjectList
         ));
     },
+    checkForDir(file) {
+      return file.directory
+    }
   },
   computed: {
     showFiles: function() {
