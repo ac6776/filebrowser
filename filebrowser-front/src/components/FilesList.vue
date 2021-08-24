@@ -38,10 +38,12 @@ const axios = require('axios').default;
 export default {
   name: 'FilesList',
   props: {
-    showHidden: Boolean
+    showHidden: Boolean,
+    homeRequested: Boolean
   },
   data() {
     return {
+      home: null,
       parent: null,
       current: null,
       files: null,
@@ -49,10 +51,16 @@ export default {
       loading: true
     };
   },
+  watch: {
+    homeRequested(newVal, oldVal) {
+      this.step(this.home.path)
+    }
+  },
   mounted() {
     axios
       .get('http://localhost:8080/')
       .then(response => (
+        this.home = response.data.current,
         this.parent = response.data.parent,
         this.current = response.data.current,
         this.files = response.data.fileObjectList
