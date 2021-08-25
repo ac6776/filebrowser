@@ -19,7 +19,17 @@
       <button
           v-for="file in showFiles"
           @click="step(file.path)"
-          type="button" class="btn btn-light m-1" :disabled="!checkForDir(file)">{{ file.name }}</button>
+          type="button" class="btn btn-light m-1" :disabled="!checkForDir(file)">
+
+        <span v-if="checkForDir(file)">
+          <i class="bi bi-folder"></i>
+        </span>
+        <span v-else>
+          <i class="bi bi-file-earmark"></i>
+        </span>
+
+        {{ file.name }}
+      </button>
     </div>
   </div>
 </template>
