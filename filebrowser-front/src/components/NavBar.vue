@@ -12,7 +12,9 @@
     </button>
 <!--    <button v-on:click="showOrHideFiles()" type="button" class="btn btn-outline-secondary" title="Hide/show hidden files">-->
     <button type="button"
-            @click="showOrHideFiles()" class="btn btn-outline-secondary" title="Hide/show hidden files">
+            @click="showOrHideFiles()"
+            :class="{active: this.active}"
+            class="btn btn-outline-secondary" title="Hide/show hidden files">
       <i class="bi bi-eye-slash icon"></i>
     </button>
   </div>
@@ -24,11 +26,13 @@ export default {
   name: 'NavBar',
   data() {
     return {
+      active: true,
       history: []
     }
   },
   methods: {
     showOrHideFiles: function () {
+      this.active = !this.active,
       this.$emit('showHiddenFromBar')
     },
     goHome: function () {
