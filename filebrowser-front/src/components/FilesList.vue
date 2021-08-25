@@ -1,4 +1,6 @@
 <template>
+  <Error500 ></Error500>
+
   <div class="row align-items-start">
     <section v-if="loading">
       <div class="d-flex align-items-center">
@@ -35,11 +37,14 @@
 </template>
 
 <script>
-
+import Error500 from '@/components/500';
 const axios = require('axios').default;
 
 export default {
   name: 'FilesList',
+  components: {
+    Error500
+  },
   props: {
     showHidden: Boolean,
     homeRequested: Boolean
