@@ -1,9 +1,11 @@
 import { createApp } from 'vue'
+import { createStore } from 'vuex'
 import App from './App.vue'
-// import '@popperjs/core/dist/esm/popper'
-// import 'bootstrap/dist/js/bootstrap.min'
-import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min'
+import Store from './components/Store'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
-createApp(App).mount('#app')
+const store = createStore(Store);
+const app = createApp(App);
+app.use(store);
+app.mount('#app');

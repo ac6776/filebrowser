@@ -1,4 +1,7 @@
 <template>
+
+  <button type="button" @click="increment">Click to change store</button>
+
   <div class="row align-items-start">
     <section v-if="loading">
       <div class="d-flex align-items-center">
@@ -47,7 +50,6 @@ export default {
   },
   data() {
     return {
-      home: null,
       parent: null,
       current: null,
       files: null,
@@ -64,34 +66,14 @@ export default {
     axios
       .get('http://localhost:8080/')
       .then(response => (
-        this.home = response.data.current,
+        // this.home = response.data.current,
+        this.$store.state.home = response.data.current,
         this.parent = response.data.parent,
         this.current = response.data.current,
         this.files = response.data.fileObjectList
       ))
       .catch(error => {
-        console.log(error);
-        if (!error.response) {
-          this.errored = {
-            type: 'con',
-            msg: 'Error: Network Connection Refused'
-          }
-        } else if (error.response.status === 500) {
-          this.errored = {
-            type: '500',
-            msg: 'Error: Serverside error [500]'
-          }
-        } else if (error.response.status === 404) {
-          this.errored = {
-            type: '500',
-            msg: 'Error: Not found [404]'
-          }
-        } else {
-          this.errored = {
-            type: 'unknown',
-            msg: 'unknown error'
-          }
-        }
+        this.errored = getError(error)
       })
       .finally(() => (
         this.loading = false
@@ -103,44 +85,28 @@ export default {
       this.loading = true,
 
       axios
-          .post('http://localhost:8080/', {
-            path
-          })
+        .post('http://localhost:8080/', {
+          path
+          // path: '222'
+        })
         .then(response => (
           this.parent = response.data.parent,
           this.current = response.data.current,
           this.files = response.data.fileObjectList
         ))
-      .catch((error) => {
-        console.log(error);
-        if (!error.response) {
-          this.errored = {
-            type: 'con',
-            msg: 'Error: Network Connection Refused'
-          }
-        } else if (error.response.status === 500) {
-          this.errored = {
-            type: '500',
-            msg: 'Error: Serverside error [500]'
-          }
-        } else if (error.response.status === 404) {
-          this.errored = {
-            type: '500',
-            msg: 'Error: Not found [404]'
-          }
-        } else {
-          this.errored = {
-            type: 'unknown',
-            msg: 'unknown error'
-          }
-        }
-      })
-      .finally(() => {
-        this.loading = false;
-      });
+        .catch((error) => {
+          this.errored = getError(error)
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     checkForDir(file) {
       return file.directory
+    },
+    increment() {
+      this.$store.commit('increment')
+      console.log(this.$store.state.count)
     }
   },
   computed: {

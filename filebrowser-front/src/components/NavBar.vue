@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import FilesList from "@/components/FilesList";
 
 export default {
   name: 'NavBar',
@@ -36,7 +37,8 @@ export default {
       this.$emit('showHiddenFromBar')
     },
     goHome: function () {
-      this.$emit('goHome')
+      // this.$emit('goHome')
+      this.$store.commit('goHome')
     }
   }
 }
