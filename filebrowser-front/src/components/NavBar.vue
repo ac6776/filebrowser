@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import FilesList from "@/components/FilesList";
 
 export default {
   name: 'NavBar',
@@ -38,7 +37,8 @@ export default {
     },
     goHome: function () {
       // this.$emit('goHome')
-      this.$store.commit('goHome')
+      // this.$store.commit('goHome')
+      // this.$parent.methods.step('E:\\Coding\\filebrowser\\filebrowser-front')
     }
   }
 }
