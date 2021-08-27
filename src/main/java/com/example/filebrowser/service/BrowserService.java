@@ -21,7 +21,8 @@ public class BrowserService {
         File file = new File(path.getPath());
         if (!file.exists()) {
             //todo throw FileNotFoundException
-            return null;
+            throw new RuntimeException("File not found");
+//            return null;
         }
         if (file.isFile()) {
             //todo

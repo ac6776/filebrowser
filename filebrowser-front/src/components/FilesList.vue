@@ -1,6 +1,4 @@
 <template>
-  <Error500 ></Error500>
-
   <div class="row align-items-start">
     <section v-if="loading">
       <div class="d-flex align-items-center">
@@ -9,8 +7,10 @@
       </div>
     </section>
     <section v-if="errored">
-      <div class="alert alert-danger mt-2" role="alert">
-        Unable to load
+      <div class="alert alert-danger mt-2 d-flex align-items-center" role="alert">
+        <i v-if="errored.type === 'con'" class="bi bi-wifi-off icon"></i>
+        <i v-else class="bi bi-exclamation-triangle-fill icon"></i>
+        {{ errored.msg }}
       </div>
     </section>
     <div class="d-flex flex-wrap mt-2">
@@ -37,14 +37,10 @@
 </template>
 
 <script>
-import Error500 from '@/components/500';
 const axios = require('axios').default;
 
 export default {
   name: 'FilesList',
-  components: {
-    Error500
-  },
   props: {
     showHidden: Boolean,
     homeRequested: Boolean
@@ -55,8 +51,8 @@ export default {
       parent: null,
       current: null,
       files: null,
-      errored: false,
-      loading: true
+      loading: true,
+      errored: false
     };
   },
   watch: {
@@ -75,7 +71,27 @@ export default {
       ))
       .catch(error => {
         console.log(error);
-        this.errored = true;
+        if (!error.response) {
+          this.errored = {
+            type: 'con',
+            msg: 'Error: Network Connection Refused'
+          }
+        } else if (error.response.status === 500) {
+          this.errored = {
+            type: '500',
+            msg: 'Error: Serverside error [500]'
+          }
+        } else if (error.response.status === 404) {
+          this.errored = {
+            type: '500',
+            msg: 'Error: Not found [404]'
+          }
+        } else {
+          this.errored = {
+            type: 'unknown',
+            msg: 'unknown error'
+          }
+        }
       })
       .finally(() => (
         this.loading = false
@@ -83,6 +99,9 @@ export default {
   },
   methods: {
     step: function (path) {
+      this.errored = false,
+      this.loading = true,
+
       axios
           .post('http://localhost:8080/', {
             path
@@ -91,7 +110,34 @@ export default {
           this.parent = response.data.parent,
           this.current = response.data.current,
           this.files = response.data.fileObjectList
-        ));
+        ))
+      .catch((error) => {
+        console.log(error);
+        if (!error.response) {
+          this.errored = {
+            type: 'con',
+            msg: 'Error: Network Connection Refused'
+          }
+        } else if (error.response.status === 500) {
+          this.errored = {
+            type: '500',
+            msg: 'Error: Serverside error [500]'
+          }
+        } else if (error.response.status === 404) {
+          this.errored = {
+            type: '500',
+            msg: 'Error: Not found [404]'
+          }
+        } else {
+          this.errored = {
+            type: 'unknown',
+            msg: 'unknown error'
+          }
+        }
+      })
+      .finally(() => {
+        this.loading = false;
+      });
     },
     checkForDir(file) {
       return file.directory

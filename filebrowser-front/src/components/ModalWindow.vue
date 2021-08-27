@@ -1,10 +1,4 @@
 <template>
-  <!-- Button trigger modal -->
-<!--  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#error500Modal">-->
-  <button type="button" class="btn btn-primary" @click="showModal()">
-    Launch demo modal
-  </button>
-
   <!-- Modal -->
   <div class="modal fade" id="error500Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -25,9 +19,9 @@
 import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min'
 
 export default {
-  name: "500",
+  name: "modalWindow",
   props: {
-    errored: Boolean
+    counter: Number
   },
   data() {
     return {
@@ -41,18 +35,13 @@ export default {
         backdrop: true,
         focus: true
       });
-      // var myInput = document.getElementById('myInput');
-
       myModal.show();
     }
   },
   watch: {
-    errored(newVal, oldVal) {
+    counter(newVal, oldVal) {
       this.showModal()
     }
-  },
-  mounted() {
-
   }
 }
 </script>
