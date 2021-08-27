@@ -1,3 +1,7 @@
+<script>
+
+</script>
+
 import {default as axios} from "axios";
 
 let getError = function(error) {
@@ -26,10 +30,18 @@ let getError = function(error) {
 }
 
 export default {
-    function (requestType, url) {
+    fetch: function (requestType, url) {
         let dataObject = null;
+        let data = {
+            home: null,
+            parent: null,
+            current: null,
+            files: null,
+            loading: true,
+            errored: false
+        }
         if (requestType === 'get') {
-            dataObject = axios.get('http://localhost:8080/');
+            dataObject = axios.get('http://localhost:8080/')
         } else {
             dataObject = axios.post('http://localhost:8080/', {
                 url
@@ -38,15 +50,18 @@ export default {
         }
         dataObject
             .then(response => (
-                this.parent = response.data.parent,
-                this.current = response.data.current,
-                this.files = response.data.fileObjectList
+                data.home = requestType === 'get' ? response.data.current : null,
+                data.parent = response.data.parent,
+                data.current = response.data.current,
+                data.files = response.data.fileObjectList
             ))
             .catch((error) => {
-                this.errored = getError(error)
+                data.errored = getError(error)
             })
             .finally(() => {
-                this.loading = false;
+                data.loading = false;
             });
+
+        return data;
     }
 }

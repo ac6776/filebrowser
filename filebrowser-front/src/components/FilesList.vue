@@ -1,25 +1,26 @@
 <template>
 
   <button type="button" @click="increment">Click to change store</button>
+  <button type="button" @click="step('2222')">Click to 2222</button>
 
   <div class="row align-items-start">
-    <section v-if="loading">
+    <section v-if="data.loading">
       <div class="d-flex align-items-center">
         <strong>Loading...</strong>
         <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
       </div>
     </section>
-    <section v-if="errored">
+    <section v-if="data.errored">
       <div class="alert alert-danger mt-2 d-flex align-items-center" role="alert">
-        <i v-if="errored.type === 'con'" class="bi bi-wifi-off icon"></i>
+        <i v-if="data.errored.type === 'con'" class="bi bi-wifi-off icon"></i>
         <i v-else class="bi bi-exclamation-triangle-fill icon"></i>
-        {{ errored.msg }}
+        {{ data.errored.msg }}
       </div>
     </section>
     <div class="d-flex flex-wrap mt-2">
       <button
-          v-if="parent"
-          @click="step(parent.path)"
+          v-if="data.parent"
+          @click="step(data.parent.path)"
           type="button" class="btn btn-light m-1"><i class="bi bi-arrow-90deg-up go-back-arrow"></i>..</button>
       <button
           v-for="file in showFiles"
@@ -40,6 +41,7 @@
 </template>
 
 <script>
+import datafetcher from "@/components/datafetcher";
 const axios = require('axios').default;
 
 export default {
@@ -50,11 +52,15 @@ export default {
   },
   data() {
     return {
-      parent: null,
-      current: null,
-      files: null,
-      loading: true,
-      errored: false
+      home: null,
+      data: {
+        home: null,
+        parent: null,
+        current: null,
+        files: null,
+        loading: true,
+        errored: false
+      }
     };
   },
   watch: {
@@ -63,43 +69,18 @@ export default {
     }
   },
   mounted() {
-    axios
-      .get('http://localhost:8080/')
-      .then(response => (
-        // this.home = response.data.current,
-        this.$store.state.home = response.data.current,
-        this.parent = response.data.parent,
-        this.current = response.data.current,
-        this.files = response.data.fileObjectList
-      ))
-      .catch(error => {
-        this.errored = getError(error)
-      })
-      .finally(() => (
-        this.loading = false
-      ));
+    // let fetched = datafetcher.fetch('get')
+    // console.log(fetched)
+    // this.data.home = fetched.home;
+    // console.log(this.data.home)
+    // if (this.data.home !== null) {
+    //   this.home = this.data.home
+    // }
   },
   methods: {
     step: function (path) {
-      this.errored = false,
-      this.loading = true,
-
-      axios
-        .post('http://localhost:8080/', {
-          path
-          // path: '222'
-        })
-        .then(response => (
-          this.parent = response.data.parent,
-          this.current = response.data.current,
-          this.files = response.data.fileObjectList
-        ))
-        .catch((error) => {
-          this.errored = getError(error)
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+      this.data = datafetcher.fetch('post', path)
+      console.log(this.data)
     },
     checkForDir(file) {
       return file.directory
@@ -111,8 +92,8 @@ export default {
   },
   computed: {
     showFiles: function() {
-      if(this.files) {
-        return this.files.filter(f => {
+      if(this.data.files) {
+        return this.data.files.filter(f => {
           if (this.showHidden) {
             return f;
           } else {
