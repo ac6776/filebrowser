@@ -1,7 +1,3 @@
-<script>
-
-</script>
-
 import {default as axios} from "axios";
 
 let getError = function(error) {
@@ -29,39 +25,45 @@ let getError = function(error) {
     }
 }
 
+let data = {
+    home: null,
+    parent: null,
+    current: null,
+    files: null,
+    loading: true,
+    errored: false
+}
+
 export default {
-    fetch: function (requestType, url) {
-        let dataObject = null;
-        let data = {
-            home: null,
-            parent: null,
-            current: null,
-            files: null,
-            loading: true,
-            errored: false
-        }
-        if (requestType === 'get') {
-            dataObject = axios.get('http://localhost:8080/')
-        } else {
-            dataObject = axios.post('http://localhost:8080/', {
-                url
-                // path: '2222'
-            })
-        }
-        dataObject
-            .then(response => (
+    fetcher: async function (requestType, url) {
+        let response = await this.getResponse(requestType, url);
+        console.log(response.response)
+            if (!data.errored) {
                 data.home = requestType === 'get' ? response.data.current : null,
                 data.parent = response.data.parent,
                 data.current = response.data.current,
                 data.files = response.data.fileObjectList
-            ))
-            .catch((error) => {
-                data.errored = getError(error)
-            })
-            .finally(() => {
-                data.loading = false;
-            });
-
-        return data;
+            }
+            return data;
+    },
+    getResponse: async function(requestType, url) {
+        let response;
+        try {
+            if (requestType === 'get') {
+                response = await axios.get('http://localhost:8080/')
+            } else {
+                response = await axios.post('http://localhost:8080/', {
+                    url
+                    // path: '2222'
+                })
+            }
+        } catch (e) {
+            console.log(e.response.status)
+            data.errored = getError(e)
+        } finally {
+            data.loading = false
+        }
+        // console.log('From response ' + response.then(res => res.data.status))
+        return response;
     }
 }

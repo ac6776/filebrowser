@@ -1,7 +1,7 @@
 <template>
 
   <button type="button" @click="increment">Click to change store</button>
-  <button type="button" @click="step('2222')">Click to 2222</button>
+  <button type="button" @click="step('E:\\Coding\\filebrowser')">Click to 2222</button>
 
   <div class="row align-items-start">
     <section v-if="data.loading">
@@ -42,7 +42,6 @@
 
 <script>
 import datafetcher from "@/components/datafetcher";
-const axios = require('axios').default;
 
 export default {
   name: 'FilesList',
@@ -69,18 +68,18 @@ export default {
     }
   },
   mounted() {
-    // let fetched = datafetcher.fetch('get')
-    // console.log(fetched)
-    // this.data.home = fetched.home;
-    // console.log(this.data.home)
-    // if (this.data.home !== null) {
-    //   this.home = this.data.home
-    // }
+    let fetched = datafetcher.fetcher('get')
+    fetched.then(response => {
+      this.data = response
+    })
+
   },
   methods: {
     step: function (path) {
-      this.data = datafetcher.fetch('post', path)
-      console.log(this.data)
+      let fetched = datafetcher.fetcher('post', path)
+      fetched.then(response => {
+        this.data = response
+      })
     },
     checkForDir(file) {
       return file.directory
