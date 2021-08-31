@@ -49,10 +49,6 @@ export default {
     showHidden: Boolean,
     homeRequested: Boolean
   },
-  data() {
-    return {
-    };
-  },
   setup() {
     const {parent, current, files, errored, loading, fetching} = useFetchingPosts()
     const {show, showHiddenFiles} = useFilterHidden(files)
@@ -61,8 +57,9 @@ export default {
       show,
       parent,
       current,
-      // files: showHiddenFiles,
-      files,
+      files: showHiddenFiles,
+      // files,
+      // showHiddenFiles,
       errored,
       loading,
       fetching

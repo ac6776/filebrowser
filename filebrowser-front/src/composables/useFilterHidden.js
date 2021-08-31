@@ -2,7 +2,7 @@ import {computed, ref} from "vue";
 
 export function useFilterHidden(files) {
     const show = ref(false)
-    const showHidden = computed(() => {
+    const showHiddenFiles = computed(() => {
         if(files.value) {
             return files.value.filter(f => {
                 if (show.value) {
@@ -17,6 +17,6 @@ export function useFilterHidden(files) {
     })
 
     return {
-        show, showHidden
+        show, showHiddenFiles
     }
 }
