@@ -72,6 +72,11 @@ export default {
     checkForDir(file) {
       return file.directory
     }
+  },
+  watch: {
+    homeRequested(newVal, oldVal) {
+      this.fetching('post', '/')
+    }
   }
 }
 </script>
