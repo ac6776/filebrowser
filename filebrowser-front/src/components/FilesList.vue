@@ -1,31 +1,30 @@
 <template>
 
-  <button type="button" @click="increment">Click to change store</button>
-  <button type="button" @click="step('2222')">Click to 2222</button>
 
   <div class="row align-items-start">
-    <section v-if="data.loading">
+    <section v-if="loading">
       <div class="d-flex align-items-center">
         <strong>Loading...</strong>
         <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
       </div>
     </section>
-    <section v-if="data.errored">
+    <section v-if="errored">
       <div class="alert alert-danger mt-2 d-flex align-items-center" role="alert">
-        <i v-if="data.errored.type === 'con'" class="bi bi-wifi-off icon"></i>
+        <i v-if="errored.type === 'con'" class="bi bi-wifi-off icon"></i>
         <i v-else class="bi bi-exclamation-triangle-fill icon"></i>
-        {{ data.errored.msg }}
+        {{ errored.msg }}
       </div>
     </section>
     <div class="d-flex flex-wrap mt-2">
       <button
-          v-if="data.parent"
-          @click="step(data.parent.path)"
+          v-if="parent"
+          @click="step(parent.path)"
           type="button" class="btn btn-light m-1"><i class="bi bi-arrow-90deg-up go-back-arrow"></i>..</button>
       <button
-          v-for="file in showFiles"
+          v-for="file in files"
           @click="step(file.path)"
-          type="button" class="btn btn-light m-1" :disabled="!checkForDir(file)">
+          type="button" class="btn btn-light m-1" :disabled="!checkForDir(file)"
+          :key="file.path">
 
         <span v-if="checkForDir(file)">
           <i class="bi bi-folder"></i>
@@ -41,8 +40,8 @@
 </template>
 
 <script>
-import datafetcher from "@/components/datafetcher";
-const axios = require('axios').default;
+import {useFetchingPosts} from "@/composables/useFetchingPosts";
+import {useFilterHidden} from "@/composables/useFilterHidden";
 
 export default {
   name: 'FilesList',
@@ -52,57 +51,30 @@ export default {
   },
   data() {
     return {
-      home: null,
-      data: {
-        home: null,
-        parent: null,
-        current: null,
-        files: null,
-        loading: true,
-        errored: false
-      }
     };
   },
-  watch: {
-    homeRequested(newVal, oldVal) {
-      this.step(this.home.path)
+  setup() {
+    const {parent, current, files, errored, loading, fetching} = useFetchingPosts()
+    const {show, showHiddenFiles} = useFilterHidden(files)
+
+    return {
+      show,
+      parent,
+      current,
+      // files: showHiddenFiles,
+      files,
+      errored,
+      loading,
+      fetching
     }
-  },
-  mounted() {
-    // let fetched = datafetcher.fetch('get')
-    // console.log(fetched)
-    // this.data.home = fetched.home;
-    // console.log(this.data.home)
-    // if (this.data.home !== null) {
-    //   this.home = this.data.home
-    // }
   },
   methods: {
     step: function (path) {
-      this.data = datafetcher.fetch('post', path)
-      console.log(this.data)
+      console.log(path)
+      this.fetching('post', path)
     },
     checkForDir(file) {
       return file.directory
-    },
-    increment() {
-      this.$store.commit('increment')
-      console.log(this.$store.state.count)
-    }
-  },
-  computed: {
-    showFiles: function() {
-      if(this.data.files) {
-        return this.data.files.filter(f => {
-          if (this.showHidden) {
-            return f;
-          } else {
-            if (!f.hidden) {
-              return f;
-            }
-          }
-        })
-      }
     }
   }
 }
