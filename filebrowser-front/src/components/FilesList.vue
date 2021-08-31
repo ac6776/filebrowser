@@ -42,6 +42,7 @@
 <script>
 import {useFetchingPosts} from "@/composables/useFetchingPosts";
 import {useFilterHidden} from "@/composables/useFilterHidden";
+import {toRefs} from 'vue';
 
 export default {
   name: 'FilesList',
@@ -49,17 +50,15 @@ export default {
     showHidden: Boolean,
     homeRequested: Boolean
   },
-  setup() {
+  setup(props) {
+    const {showHidden} = toRefs(props)
     const {parent, current, files, errored, loading, fetching} = useFetchingPosts()
-    const {show, showHiddenFiles} = useFilterHidden(files)
+    const {showHiddenFiles} = useFilterHidden(showHidden, files)
 
     return {
-      show,
       parent,
       current,
       files: showHiddenFiles,
-      // files,
-      // showHiddenFiles,
       errored,
       loading,
       fetching
