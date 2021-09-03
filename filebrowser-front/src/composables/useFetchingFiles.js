@@ -9,7 +9,7 @@ export function useFetchingFiles() {
     const parent = ref(null)
     const current = ref(null)
     const files = ref([])
-    const errored = ref(false)
+    const errored = ref({type: 'OK', msg: ''})
     const loading = ref(true)
 
     function setHome(value) {

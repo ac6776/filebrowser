@@ -2,32 +2,49 @@
   <div class="container mt-5">
     <div class="d-flex justify-content-between">
       <h1 class="primary-font">My filebrowser</h1>
-      <!--
-        Child to parent data transfer using $emit
-      -->
       <NavBar
           @showHiddenFromBar="show($event)"
-          @goHome="goHome($event)"/>
+          @goHome="step($event)"/>
     </div>
-    <!--
-      Parent to child data transfer using Props
-    -->
+
+    <button type="button" @click="show">ShowHidden</button>
     <FilesList
-        :showHidden="this.showHidden"
-        :homeRequested="this.homeRequested"/>
+      :parent="this.parent"
+      :current="this.current"
+      :files="this.files"
+      :loading="this.loading"
+      :errored="this.errored"
+
+      @step="step($event)"/>
   </div>
 </template>
 
 <script>
 import FilesList from "@/components/FilesList";
 import NavBar from "@/components/NavBar";
+import {ref} from "vue";
+import {useFetchingFiles} from "@/composables/useFetchingFiles";
+import {useFilterHidden} from "@/composables/useFilterHidden";
 
 export default {
   name: 'App',
   data() {
     return {
-      showHidden: false,
-      homeRequested: false
+    }
+  },
+  setup() {
+    const showHidden = ref(false)
+    const {parent, current, files, errored, loading, fetching} = useFetchingFiles()
+    const {showHiddenFiles} = useFilterHidden(showHidden, files)
+
+    return {
+      showHidden,
+      parent,
+      current,
+      files: showHiddenFiles,
+      errored,
+      loading,
+      fetching
     }
   },
   components: {
@@ -35,12 +52,11 @@ export default {
     NavBar
   },
   methods: {
-    show: function () {
-      this.showHidden = !this.showHidden,
-      console.log(this.showHidden + " form App.vue")
+    show() {
+      this.showHidden = !this.showHidden
     },
-    goHome: function () {
-      this.homeRequested = !this.homeRequested
+    step(path) {
+      this.fetching('post', path)
     }
   }
 }

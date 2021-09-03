@@ -8,7 +8,7 @@
         <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
       </div>
     </section>
-    <section v-if="errored">
+    <section v-if="errored.type !== 'OK'">
       <div class="alert alert-danger mt-2 d-flex align-items-center" role="alert">
         <i v-if="errored.type === 'con'" class="bi bi-wifi-off icon"></i>
         <i v-else class="bi bi-exclamation-triangle-fill icon"></i>
@@ -40,49 +40,25 @@
 </template>
 
 <script>
-import {useFetchingFiles} from "@/composables/useFetchingFiles";
-import {useFilterHidden} from "@/composables/useFilterHidden";
-import {ref, toRefs} from 'vue';
 
 export default {
   name: 'FilesList',
-  data() {
-    return {
-      home: null
-    }
-  },
   props: {
-    showHidden: Boolean,
-    homeRequested: Boolean
+    parent: Object,
+    current: Object,
+    files: Array,
+    loading: Boolean,
+    errored: Object
   },
-  setup(props) {
-    const {showHidden} = toRefs(props)
-    // const {setHome, parent, current, files, errored, loading, fetching} = useFetchingFiles()
-    const {parent, current, files, errored, loading, fetching} = useFetchingFiles()
-    const {showHiddenFiles} = useFilterHidden(showHidden, files)
 
-    return {
-      parent,
-      current,
-      files: showHiddenFiles,
-      errored,
-      loading,
-      fetching
-    }
-  },
   methods: {
-    step: function (path) {
-      this.fetching('post', path)
-    },
     checkForDir(file) {
       return file.directory
+    },
+    step(path) {
+      this.$emit('step', path)
     }
   },
-  watch: {
-    homeRequested(newVal, oldVal) {
-      this.fetching('post', this.$store.state.home.path)
-    }
-  }
 }
 </script>
 <style>

@@ -1,5 +1,4 @@
 export function getError(error) {
-    console.log(error);
     if (!error.response) {
         return {
             type: 'con',
@@ -12,7 +11,7 @@ export function getError(error) {
         }
     } else if (error.response.status === 404) {
         return {
-            type: '500',
+            type: '404',
             msg: 'Error: Not found [404]'
         }
     } else {

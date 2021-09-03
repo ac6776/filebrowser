@@ -36,9 +36,7 @@ export default {
       this.$emit('showHiddenFromBar')
     },
     goHome: function () {
-      this.$emit('goHome')
-      // this.$store.commit('goHome')
-
+      this.$emit('goHome', this.$store.state.home.path)
     }
   }
 }
