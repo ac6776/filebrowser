@@ -40,19 +40,25 @@
 </template>
 
 <script>
-import {useFetchingPosts} from "@/composables/useFetchingPosts";
+import {useFetchingFiles} from "@/composables/useFetchingFiles";
 import {useFilterHidden} from "@/composables/useFilterHidden";
-import {toRefs} from 'vue';
+import {ref, toRefs} from 'vue';
 
 export default {
   name: 'FilesList',
+  data() {
+    return {
+      home: null
+    }
+  },
   props: {
     showHidden: Boolean,
     homeRequested: Boolean
   },
   setup(props) {
     const {showHidden} = toRefs(props)
-    const {parent, current, files, errored, loading, fetching} = useFetchingPosts()
+    // const {setHome, parent, current, files, errored, loading, fetching} = useFetchingFiles()
+    const {parent, current, files, errored, loading, fetching} = useFetchingFiles()
     const {showHiddenFiles} = useFilterHidden(showHidden, files)
 
     return {
@@ -66,7 +72,6 @@ export default {
   },
   methods: {
     step: function (path) {
-      console.log(path)
       this.fetching('post', path)
     },
     checkForDir(file) {
@@ -75,7 +80,7 @@ export default {
   },
   watch: {
     homeRequested(newVal, oldVal) {
-      this.fetching('post', '/')
+      this.fetching('post', this.$store.state.home.path)
     }
   }
 }

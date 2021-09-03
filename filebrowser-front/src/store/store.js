@@ -1,17 +1,13 @@
-<script>
-
 export default {
   name: "Store",
   state () {
     return {
       home: null,
-      count: 0
     }
   },
   mutations: {
-    increment (state) {
-      state.count++
-    },
+    setHome(state, home) {
+      state.home = home
+    }
   }
 }
-</script>

@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
 import App from './App.vue'
-import Store from './components/Store'
+import Store from './store/store'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
