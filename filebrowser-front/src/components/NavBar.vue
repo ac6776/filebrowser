@@ -25,7 +25,7 @@
       </span>
     </button>
     <button type="button"
-            @click="this.$emit('goHome', this.$store.state.home.path)"
+            @click="this.$emit('goHome', this.$store.state.home)"
             class="btn btn-light"
             title="Home directory">
       <i class="bi bi-house"></i>
