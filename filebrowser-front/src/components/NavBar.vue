@@ -1,21 +1,42 @@
 <template>
   <div class="btn-group">
-    <button type="button" class="btn btn-outline-secondary" title="Go back">
-      <i class="bi bi-arrow-left-circle icon"></i>
-    </button>
-    <button type="button" class="btn btn-outline-secondary" title="Go forward">
-      <i class="bi bi-arrow-right-circle icon"></i>
+    <button type="button"
+            @click="this.$emit('goBack')"
+            class="btn btn-light"
+            title="Go back"
+            :disabled="undoHistory.length === 0">
+      <i class="bi bi-arrow-counterclockwise"></i>
+      <span v-if="undoHistory.length > 0" 
+        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        {{undoHistory.length}}
+      <span class="visually-hidden">redo history</span>
+      </span>
     </button>
     <button type="button"
-            @click="goHome()" class="btn btn-outline-secondary" title="Home directory">
-      <i class="bi bi-house icon"></i>
+            @click="this.$emit('goForward')"
+            class="btn btn-light"
+            title="Go forward"
+            :disabled="redoHistory.length === 0">
+      <i class="bi bi-arrow-clockwise"></i>
+      <span v-if="redoHistory.length > 0" 
+        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        {{redoHistory.length}}
+      <span class="visually-hidden">redo history</span>
+      </span>
     </button>
-<!--    <button v-on:click="showOrHideFiles()" type="button" class="btn btn-outline-secondary" title="Hide/show hidden files">-->
     <button type="button"
-            @click="showOrHideFiles()"
+            @click="this.$emit('goHome', this.$store.state.home.path)"
+            class="btn btn-light"
+            title="Home directory">
+      <i class="bi bi-house"></i>
+    </button>
+    <button type="button"
+            @click="showOrHideFiles"
             :class="{active: this.active}"
-            class="btn btn-outline-secondary" title="Hide/show hidden files">
-      <i class="bi bi-eye-slash icon"></i>
+            class="btn btn-light"
+            title="Hide/show hidden files">
+      <i v-if="!active" class="bi bi-eye-slash "></i>
+      <i v-else class="bi bi-eye-slash-fill"></i>
     </button>
   </div>
 </template>
@@ -27,25 +48,35 @@ export default {
   data() {
     return {
       active: true,
-      history: []
+    }
+  },
+  props: {
+    undoHistory: {
+      type: Array,
+      required: true
+    },
+    redoHistory: {
+      type: Array,
+      required: true
     }
   },
   methods: {
     showOrHideFiles: function () {
       this.active = !this.active,
       this.$emit('showHiddenFromBar')
-    },
-    goHome: function () {
-      this.$emit('goHome', this.$store.state.home.path)
     }
   }
 }
 </script>
 
-<style>
-  .icon {
+
+<style lang="css" scoped>
+  button i {
     font-size: 2rem;
     line-height: 2rem;
-    padding: 5px;
+    padding: 6px;
+  }
+  button span {
+    z-index: 1500;
   }
 </style>

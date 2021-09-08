@@ -42,7 +42,7 @@ export function useFetchingFiles() {
         }
     }
 
-    onMounted(fetching('get'))
+    // onMounted(fetching('get'))
 
     return {
         parent,

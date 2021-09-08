@@ -18,11 +18,11 @@
     <div class="d-flex flex-wrap mt-2">
       <button
           v-if="parent"
-          @click="step(parent.path)"
+          @click="step(parent)"
           type="button" class="btn btn-light m-1"><i class="bi bi-arrow-90deg-up go-back-arrow"></i>..</button>
       <button
           v-for="file in files"
-          @click="step(file.path)"
+          @click="step(file)"
           type="button" class="btn btn-light m-1" :disabled="!checkForDir(file)"
           :key="file.path">
 

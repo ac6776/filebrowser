@@ -4,10 +4,16 @@
       <h1 class="primary-font">My filebrowser</h1>
       <NavBar
           @showHiddenFromBar="show($event)"
-          @goHome="step($event)"/>
+          @goHome="step($event)"
+          @go-back="undo($event)"
+          @go-forward="redo($event)"
+
+          :undo-history="undoHistory"
+          :redo-history="redoHistory"
+      />
     </div>
 
-    <button type="button" @click="show">ShowHidden</button>
+<!--    <button type="button" @click="show">ShowHidden</button>-->
     <FilesList
       :parent="this.parent"
       :current="this.current"
@@ -30,6 +36,8 @@ export default {
   name: 'App',
   data() {
     return {
+      undoHistory: [],
+      redoHistory: []
     }
   },
   setup() {
@@ -55,9 +63,30 @@ export default {
     show() {
       this.showHidden = !this.showHidden
     },
-    step(path) {
-      this.fetching('post', path)
+    step(node) {
+      //todo fix history
+      // this.undoHistory.push(this.parent)
+      this.undoHistory.push(this.current)
+      this.redoHistory = []
+      this.fetching('post', node.path)
+    },
+    redo() {
+      if (this.redoHistory.length !== 0) {
+        const node = this.redoHistory.pop()
+        this.undoHistory.push(node)
+        this.fetching('post', node.path)
+      }
+    },
+    undo() {
+      if (this.undoHistory.length !== 0) {
+        this.redoHistory.push(this.current)
+        const node = this.undoHistory.pop()
+        this.fetching('post', node.path)
+      }
     }
+  },
+  mounted() {
+    this.fetching('get')
   }
 }
 </script>
