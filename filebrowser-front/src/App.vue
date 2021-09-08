@@ -64,8 +64,6 @@ export default {
       this.showHidden = !this.showHidden
     },
     step(node) {
-      //todo fix history
-      // this.undoHistory.push(this.parent)
       this.undoHistory.push(this.current)
       this.redoHistory = []
       this.fetching('post', node.path)
@@ -73,7 +71,7 @@ export default {
     redo() {
       if (this.redoHistory.length !== 0) {
         const node = this.redoHistory.pop()
-        this.undoHistory.push(node)
+        this.undoHistory.push(this.current)
         this.fetching('post', node.path)
       }
     },
