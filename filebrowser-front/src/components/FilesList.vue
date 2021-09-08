@@ -19,27 +19,18 @@
       <button
           v-if="parent"
           @click="step(parent)"
-          type="button" class="btn btn-light m-1"><i class="bi bi-arrow-90deg-up go-back-arrow"></i>..</button>
-      <button
-          v-for="file in files"
-          @click="step(file)"
-          type="button" class="btn btn-light m-1" :disabled="!checkForDir(file)"
-          :key="file.path">
-
-        <span v-if="checkForDir(file)">
-          <i class="bi bi-folder"></i>
-        </span>
-        <span v-else>
-          <i class="bi bi-file-earmark"></i>
-        </span>
-
-        {{ file.name }}
+          type="button" class="btn btn-light m-1"><i class="bi bi-arrow-90deg-up go-back-arrow"></i>
+        ..
       </button>
+      <File v-for="file in files" :key="file.path"
+      :file="file"
+      @step="step($event)"/>
     </div>
   </div>
 </template>
 
 <script>
+import File from '@/components/File'
 
 export default {
   name: 'FilesList',
@@ -50,13 +41,15 @@ export default {
     loading: Boolean,
     errored: Object
   },
-
+  components: {
+    File
+  },
   methods: {
     checkForDir(file) {
       return file.directory
     },
-    step(path) {
-      this.$emit('step', path)
+    step(node) {
+      this.$emit('step', node)
     }
   },
 }

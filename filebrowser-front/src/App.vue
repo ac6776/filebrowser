@@ -13,7 +13,6 @@
       />
     </div>
 
-<!--    <button type="button" @click="show">ShowHidden</button>-->
     <FilesList
       :parent="this.parent"
       :current="this.current"
